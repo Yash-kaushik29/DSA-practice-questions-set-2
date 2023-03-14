@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int sumNumbers(TreeNode* root, int sum=0) {
+        
+         if(root == NULL) {
+            return 0;
+        }
+
+        sum = sum*10 + root->val;
+
+        if(root->left == NULL && root->right == NULL) {
+            return sum;
+        }
+
+        return sumNumbers(root->left, sum) + sumNumbers(root->right, sum);
+    }
+};
