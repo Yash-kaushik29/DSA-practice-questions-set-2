@@ -9,7 +9,7 @@ class Solution {
             if(nbr == parent) continue;
             
             if(!vis[nbr]) {
-                dfs(nbr, node, timer, adj, vis, disc, low,);
+                dfs(nbr, node, timer, adj, vis, disc, low, ap);
                 low[node] = min(low[node], low[nbr]);
                 
                 if(low[nbr] >= disc[node] && parent != -1) {
