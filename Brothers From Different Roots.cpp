@@ -13,8 +13,8 @@ public:
     void solve(Node* root1, Node* root2, int x, int& c) {
         if(!root1) return ;
         
-        solve(root1->left, root2, x, c);
         if(found(root2, x-root1->data)) c++;
+        solve(root1->left, root2, x, c);
         solve(root1->right, root2, x, c);
     }
 
