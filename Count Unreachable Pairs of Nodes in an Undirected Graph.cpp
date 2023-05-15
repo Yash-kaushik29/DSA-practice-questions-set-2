@@ -1,46 +1,46 @@
 class Solution {
 public:
-    vector<int> vis;
+    int dfs(int node, vector<int>& vis, vector<int> adj[]) {
 
-    int dfs(vector<vector<int>> &g,int i){
-
-        vis[i]=1;
+        vis[node]=1;
         int ans=1;
-        for(auto &j:g[i]){
-            if(!vis[j]){
-                ans+=dfs(g,j);
+
+        for(auto adjacent: adj[node]) {
+            if(!vis[adjacent]) {
+                ans+=dfs(adjacent, vis, adj);
             }
         }
+
         return ans;
     }
 
-
     long long countPairs(int n, vector<vector<int>>& edges) {
+        
+        vector<int> adj[n];
+        vector<int> vis(n,0);
 
-        vector<vector<int>> g(n);
-        vis=vector<int>(n,0);
-
-        for(auto &i:edges){
-            g[i[0]].push_back(i[1]);
-            g[i[1]].push_back(i[0]);
+        for(auto edge: edges) {
+            adj[edge[0]].push_back(edge[1]);
+            adj[edge[1]].push_back(edge[0]);
         }
 
-        vector<int> component;
-        for(int i=0;i<n;i++){
-            if(!vis[i]){
-                int x=dfs(g,i);
-                component.push_back(x);
+        vector<int> components;
+
+        for(int i=0; i<n; i++) {
+            if(!vis[i]) {
+                int c = dfs(i, vis, adj);
+                components.push_back(c); 
             }
         }
 
-        long long ans=0;
-        long long t=0;
+        long long size = 0;
+        long long res = 0;
 
-        for(int i=0;i<component.size();i++){
-            t+=component[i];
-            ans+=(n-t)*component[i];
+        for(int i=0; i<components.size(); i++) {
+            size+=components[i];
+            res+=(n-size)*components[i];
         }
-        return ans;
-        
+
+        return res;
     }
 };
