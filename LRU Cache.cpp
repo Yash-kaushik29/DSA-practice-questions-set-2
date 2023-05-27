@@ -1,14 +1,14 @@
-class LRUCache
-{
+class LRUCache {
+public:
     class node {
-        public: 
+        public:
           int _key, _value;
+          node* next;
           node* prev;
-          node*next;
 
-          node(int k, int v) {
-              _key = k;
-              _value = v;
+          node(int k, int value) {
+              _key=k;
+              _value=value;
           }
     };
 
@@ -16,25 +16,24 @@ class LRUCache
     node* tail = new node(-1,-1);
 
     int capacity;
-    unordered_map<int, node*> m;
+    unordered_map<int, node*> mp;
 
-    public:
     //Constructor for initializing the cache capacity with the given value.
     LRUCache(int cap) {
-       capacity = cap;
+        capacity=cap;
         head->next = tail;
         tail->prev = head;
     }
 
-    void InsertNode(node* curr) {
+    void insertNode(node* curr) {
         node* temp = head->next;
         curr->next = temp;
-        curr->prev =  head;
-        head->next = curr;
         temp->prev = curr;
+        head->next = curr;
+        curr->prev = head;
     }
 
-    void DeleteNode(node* curr) {
+    void deleteNode(node* curr) {
         node* delPrev = curr->prev;
         node* delNext = curr->next;
         delPrev->next = delNext;
@@ -42,42 +41,39 @@ class LRUCache
     }
     
     //Function to return value corresponding to the key.
-    int GET(int key)
-    {
-        if(m.find(key) != m.end()) {
-            node* resNode = m[key];
+    int get(int key) {
+        if(mp.find(key) != mp.end()) {
+            node* resNode = mp[key];
             int res = resNode->_value;
-            m.erase(key);
+            mp.erase(key);
 
             // Delete from the previous position and store it in the front(used recently)
-            DeleteNode(resNode);
-            InsertNode(resNode);
-            
+            deleteNode(resNode);
+            insertNode(resNode);
+
             // update m[key] with new position
-            m[key] = head->next;
+            mp[key] = head->next;
             return res;
         }
-
         return -1;
     }
     
     //Function for storing key-value pair.
-    void SET(int key, int value)
-    {
-           if(m.find(key) != m.end()) {
-            node* existingNode = m[key];
-            m.erase(key);
-            DeleteNode(existingNode);
+    void put(int key, int value) {
+        if(mp.find(key) != mp.end()) {
+            node* existingNode = mp[key];
+            mp.erase(key);
+            deleteNode(existingNode);
         }
 
-        if(m.size() == capacity) {
-            // Delete the last node(least recently used)
-            m.erase(tail->prev->_key);
-            DeleteNode(tail->prev);
+        // Delete the last node(least recently used)
+        if(mp.size() == capacity) {
+            mp.erase(tail->prev->_key);
+            deleteNode(tail->prev);
         }
         
         //update the new node
-        InsertNode(new node(key, value));
-        m[key] = head->next;
+        insertNode(new node(key, value));
+        mp[key] = head->next;
     }
 };
