@@ -1,3 +1,4 @@
+// Approach 1
 class Solution
 {
     public:
@@ -20,6 +21,35 @@ class Solution
         }
         
         return head;
+    }
+};
+
+// Approach 2
+class Solution
+{
+    public:
+    //Function to rotate a linked list.
+    Node* rotate(Node* head, int k)
+    {
+        Node* temp = head;
+        
+        while(k > 1) {
+            temp = temp->next;
+            k--;
+        }
+        
+        if(temp->next == NULL) return head;
+        
+        Node* newHead = temp->next;
+        temp->next = NULL;
+        
+        temp = newHead;
+        while(temp->next) {
+            temp = temp->next;
+        }
+        
+        temp->next = head;
+        return newHead;
     }
 };
   
