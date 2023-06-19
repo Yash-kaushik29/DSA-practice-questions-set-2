@@ -1,35 +1,31 @@
 class Solution{
   public:
-    vector<int> vis;
-    int count =0;
-    
-    bool dfs(vector<int> adj[], int i) {
-        vis[i]=1;
-        bool select=false;
+    int dfs(int node, vector<int> adj[], vector<int>& vis, int& ans) {
+        if(vis[node]) return 0;
+        vis[node]=1;
         
-        for(auto child: adj[i]) {
-            if(!vis[child] && !dfs(adj,child))
-            select=true;
+        int select=0;
+        for(auto nbr: adj[node]) {
+            if(!vis[nbr] && !dfs(nbr, adj, vis, ans)) {
+                select=1;
+            }
         }
         
-        if(select) {
-            count++;
-        }
-        
+        if(select) ans++;
         return select;
     }
   
     int countVertex(int N, vector<vector<int>>edges){
-        // code here
+        vector<int> vis(N+1,0);
         vector<int> adj[N+1];
-        vis=vector<int> (N+1,0);
         
-        for(auto ele:edges) {
-            adj[ele[0]].push_back(ele[1]);
-            adj[ele[1]].push_back(ele[0]);
+        for(auto edge: edges) {
+            adj[edge[0]].push_back(edge[1]);
+            adj[edge[1]].push_back(edge[0]);
         }
-        dfs(adj,1);
         
-        return count;
+        int ans=0;
+        dfs(1, adj, vis, ans);
+        return ans;
     }
 };
